@@ -4,9 +4,9 @@ import { useGetTasksQuery } from "@/redux/features/reduxapi/task";
 
 
 
-const BoardPage = ({id}: {id: number}) => {
+const BoardPage = ({id}: {id: string}) => {
 
-  const {data: tasks} = useGetTasksQuery({projectId: id});
+  const {data: tasks} = useGetTasksQuery({projectId: Number(id)});
 
   console.log(tasks)
 
