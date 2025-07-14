@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { BookUser, LayoutDashboardIcon, List, PlusSquare, TimerIcon } from 'lucide-react'
 import ListPage from '../pages/list'
@@ -22,7 +21,7 @@ const ProjectId = async ({params}: Props) => {
             <Button><PlusSquare /> New Board</Button>
         </div>
 
-        <div className='flex md:flex-row flex-col-reverse gap-4 items-start justify-between w-full'>
+        <div className='flex lg:flex-row flex-col-reverse gap-4 items-start justify-around w-full max-h-screen'>
             <Tabs defaultValue='board' className='w-full'>
                 <TabsList>
                     <TabsTrigger value='board'><LayoutDashboardIcon />Borads</TabsTrigger>
@@ -44,7 +43,6 @@ const ProjectId = async ({params}: Props) => {
                 </TabsContent>
             </Tabs>
 
-            <Input type='search' placeholder='Search Tasks' className='lg:w-96 md:w-72 w-64' />
         </div>
     </div>
   )
