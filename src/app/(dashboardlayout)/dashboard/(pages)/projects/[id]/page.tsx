@@ -1,10 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { BookUser, LayoutDashboardIcon, List, PlusSquare, TimerIcon } from 'lucide-react'
-import ListPage from '../pages/list'
-import BoardPage from '../pages/board'
-import TaskPage from '../pages/task'
-import TimeLinePage from '../pages/timeline'
+import BoardPage from '../pages/boardView'
+import TimeLineView from '../pages/timelineView'
+import TaskView from '../pages/taskView'
+import ListView from '../pages/listView'
+
 
 type Props = {
     params: {id: string};
@@ -33,13 +34,13 @@ const ProjectId = async ({params}: Props) => {
                     <BoardPage id={id} />
                 </TabsContent>
                 <TabsContent value='list'>
-                    <ListPage />
+                    <ListView id={id} />
                 </TabsContent>
                 <TabsContent value='timeline'>
-                    <TimeLinePage />
+                    <TimeLineView id={id} />
                 </TabsContent>
                 <TabsContent value='tasks'>
-                    <TaskPage />
+                    <TaskView/>
                 </TabsContent>
             </Tabs>
 

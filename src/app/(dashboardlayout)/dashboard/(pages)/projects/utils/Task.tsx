@@ -95,14 +95,22 @@ const Tasks = ({task}: TaskProps) => {
 
                 <div className="mt-3 flex items-center justify-between">
                     <div className="flex -space-x-[6px] overflow-hidden">
-                        <Avatar>
-                            <AvatarImage src={'https://res.cloudinary.com/dse9babc4/image/upload/v1745576207/kxkwsm1md2-1745576201782-images-482024512_1261641075964882_3565966937447068422_n.jpg'} alt="i" />
-                            <AvatarFallback>A</AvatarFallback>
-                        </Avatar>
-                        <Avatar>
-                            <AvatarImage src={'https://res.cloudinary.com/dse9babc4/image/upload/v1745576207/kxkwsm1md2-1745576201782-images-482024512_1261641075964882_3565966937447068422_n.jpg'} alt="i" />
-                            <AvatarFallback>A</AvatarFallback>
-                        </Avatar>
+                        {
+                            task.assignee && (
+                                <Avatar key={task.assignee.userId} className="border-2 border-white">
+                                    <AvatarImage src={'https://res.cloudinary.com/dse9babc4/image/upload/v1752003057/2025010002I%20am.png'} alt="i" />
+                                    <AvatarFallback>A</AvatarFallback>
+                                </Avatar>
+                            )
+                        }
+                        {
+                            task.author && (
+                                <Avatar key={task.author.userId} className="border-2 border-white">
+                                    <AvatarImage src={'https://res.cloudinary.com/dse9babc4/image/upload/v1745576207/kxkwsm1md2-1745576201782-images-482024512_1261641075964882_3565966937447068422_n.jpg'} alt="i" />
+                                    <AvatarFallback>A</AvatarFallback>
+                                </Avatar>
+                            )
+                        }
                     </div>
 
                     <div className="flex items-center text-gray-500 dark:text-neutral-500">

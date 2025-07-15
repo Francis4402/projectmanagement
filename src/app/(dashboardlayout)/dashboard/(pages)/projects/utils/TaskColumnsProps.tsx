@@ -28,7 +28,7 @@ const TaskColumnsProps = ({status, tasks, moveTask}: TaskColumnProps) => {
 
 
   return (
-    <Card ref={(instance) => {drop(instance)}} className={`${isOver ? "opacity-50" : "opacity-100"}`}>
+    <Card ref={(instance) => {drop(instance)}} className={`${isOver ? "opacity-50" : "opacity-100"} bg-transparent`}>
         <CardHeader>
             <div className="flex justify-between">
                 <div className="flex items-center gap-2">

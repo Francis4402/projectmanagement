@@ -41,7 +41,7 @@ const Projects = () => {
                         })
                     }
                 </div>
-            : <div className="flex flex-col items-center justify-center h-screen">There is no Project</div>
+            : <div className="flex flex-col text-xl items-center justify-center h-screen">There is no Project</div>
         }
     </div>
   )
