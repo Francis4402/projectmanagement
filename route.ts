@@ -7,7 +7,12 @@ export const adminRoutes = [
 ]
 
 export const userRoutes = [
-    "/dashboard"
+    "/dashboard",
+    "/dashboard/tasks",
+    "/dashboard/projects",
+    "/dashboard/teams",
+    "/dashboard/users",
+    "/dashboard/settings",
 ]
 
 export const authRoutes = [
@@ -16,4 +21,4 @@ export const authRoutes = [
 ]
 
 
-export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
+export const DEFAULT_LOGIN_REDIRECT = "/";

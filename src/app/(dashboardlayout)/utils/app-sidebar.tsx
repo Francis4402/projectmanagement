@@ -79,7 +79,7 @@ const data = {
   layouts: [
     {
       name: "Home",
-      url: "/dashboard",
+      url: "/",
       icon: Home,
     },
     {

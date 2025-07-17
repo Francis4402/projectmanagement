@@ -5,7 +5,7 @@ import BoardPage from '../pages/boardView'
 import TimeLineView from '../pages/timelineView'
 import TaskView from '../pages/taskView'
 import ListView from '../pages/listView'
-import BoardForms from '../utils/BoardForms'
+
 
 
 type Props = {
@@ -14,14 +14,11 @@ type Props = {
 
 const ProjectId = async ({params}: Props) => {
 
-    const { id } = await params;
+    const { id } = params;
 
   return (
     <div className='flex flex-col gap-10 w-full'>
-        <div className='flex justify-between'>
-            <h1 className='text-4xl font-bold'>Project Tasks</h1>
-            <BoardForms />
-        </div>
+        
 
         <div className='flex lg:flex-row flex-col-reverse gap-4 items-start justify-around w-full max-h-screen'>
             <Tabs defaultValue='board' className='w-full'>

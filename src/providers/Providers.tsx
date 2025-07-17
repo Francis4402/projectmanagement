@@ -7,11 +7,11 @@ import UserProvider from "@/app/context/UserContext"
 
 const Providers = ({ children }: { children: ReactNode }) => {
     return (
-        <UserProvider>
-            <StoreProviders>
+        <StoreProviders>
+            <UserProvider>
                 {children}
-            </StoreProviders>
-        </UserProvider>
+            </UserProvider>
+        </StoreProviders>
     )
   }
   

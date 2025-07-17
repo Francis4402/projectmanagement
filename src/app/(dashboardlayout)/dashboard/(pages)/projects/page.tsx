@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { useGetProjectsQuery } from "@/redux/features/reduxapi/project"
 import { Project } from "@/types";
 import { useRouter } from "next/navigation";
+import BoardForms from "./utils/BoardForms";
 
 const Projects = () => {
 
@@ -16,7 +17,10 @@ const Projects = () => {
     
   return (
     <div className="flex flex-col gap-10">
-        <h1 className="text-2xl">Projects</h1>
+        <div className='flex justify-between'>
+            <h1 className='text-4xl font-bold'>Projects </h1>
+            <BoardForms />
+        </div>
         {
             Array.isArray(project) && project.length > 0 ? 
                 <div className="grid lg:grid-cols-4 sm:grid-cols-2 gap-4">

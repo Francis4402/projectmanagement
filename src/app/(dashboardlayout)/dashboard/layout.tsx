@@ -14,7 +14,6 @@ const DasboardLayout = ({children}: {children: React.ReactNode}) => {
           {children}
         </div>
       </SidebarInset>
-
     </SidebarProvider>
   )
 }

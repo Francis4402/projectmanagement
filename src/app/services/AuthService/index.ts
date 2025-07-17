@@ -1,25 +1,28 @@
 "use server"
 
-import { cookies } from "next/headers";
 import { FieldValues } from "react-hook-form";
 import { jwtDecode } from "jwt-decode";
+import { cookies } from "next/headers";
 
 
 export const loginUser = async (userData: FieldValues) => {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/login`, {
+            
             method: "POST",
+            
             headers: {
                 "Content-Type": "application/json"
             },
-            credentials: "include",
-            body: JSON.stringify(userData)
+            
+            body: JSON.stringify(userData),
+            cache: "no-store",
         });
 
         const result = await res.json();
 
         
-        if(result.token) {
+        if (result.success) {
             (await cookies()).set("token", result.token);
         }
 
@@ -38,14 +41,15 @@ export const registerUser = async (userData: FieldValues) => {
             headers: {
                 "Content-Type": "application/json",
             },
-            credentials: "include",
+            
             body: JSON.stringify(userData),
+            cache: "no-store",
         });
 
         const result = await res.json();
 
         if (result.success) {
-            (await cookies()).set("token", result.data.token);
+            (await cookies()).set("token", result.token);
         }
 
         return result;

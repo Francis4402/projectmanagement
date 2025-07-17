@@ -4,6 +4,7 @@ import { useUser } from '@/app/context/UserContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
+import LoginForm from '../(authpages)/authforms/LoginForm'
 
 
 const Navbar = () => {
@@ -32,9 +33,7 @@ const Navbar = () => {
                     <Button variant={"outline"}>Dashboard</Button>
                 </Link>
               ) : (
-                <Link href={"/login"}>
-                    <Button variant={"outline"}>Login</Button>
-                </Link>
+                <LoginForm />
               )
             }
         </nav>

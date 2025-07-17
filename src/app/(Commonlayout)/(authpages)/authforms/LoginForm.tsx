@@ -1,60 +1,66 @@
-import { registerUser } from "@/app/services/AuthService"
+"use client"
+
+import { loginUser } from "@/app/services/AuthService"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
-import Link from "next/link"
-import { useRouter } from "next/router"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter, useSearchParams } from "next/navigation"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "sonner"
+import { loginSchema } from "./schemas/loginSchema"
+import { useUser } from "@/app/context/UserContext"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import RegisterForm from "./RegisterForm"
 
+const LoginForm = ({onOpenLogin}: {onOpenLogin?: () => void}) => {
 
-const RegisterForm = ({className, ...props}: React.ComponentProps<"div">) => {
-
-
-    const router = useRouter();
-
-    const form = useForm();
-    
+    const form = useForm({
+        resolver: zodResolver(loginSchema)
+    });
 
     const {formState: {isSubmitting}} = form;
 
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirect = searchParams.get("redirectPath");
+    const { refreshUser } = useUser();
+    
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
-            const res = await registerUser(data);
+          const response = await loginUser(data);
 
-            if (res?.success) {
-                toast.success(res?.message);
-                router.push("/login");
+          if (response.success) {
+            toast.success("Login successful");
+            await refreshUser();
+            
+            if (redirect) {
+              router.push(redirect);
+            } else {
+              router.push("/dashboard");
             }
+          } else {
+            toast.error(response?.message);
+          }
+          
         } catch (error) {
-            console.log(error);
+          console.log(error);
         }
     }
 
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-        </CardHeader>
-        <CardContent>
+    <Dialog>
+        <DialogTrigger asChild>
+          <Button variant={"outline"} onClick={onOpenLogin}>Login</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Login To Your Account</DialogTitle>
+          </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-6">
-                <div className="grid gap-3">
-                  <FormField control={form.control} name="username" render={({field}) => (
-                    <FormItem>
-                      <FormLabel>Your Name</FormLabel>
-                      <FormControl>
-                        <Input type="text" {...field} value={field.value || ""} placeholder="Username" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                </div>
                 <div className="grid gap-3">
                   <FormField control={form.control} name="email" render={({field}) => (
                     <FormItem>
@@ -79,25 +85,22 @@ const RegisterForm = ({className, ...props}: React.ComponentProps<"div">) => {
                 </div>
                 <div className="flex flex-col gap-3">
                     <Button type="submit" className="w-full" disabled={isSubmitting}>
-                        { isSubmitting ? "Logging in..." : "Register" }
+                        { isSubmitting ? "Logging in..." : "Login" }
                     </Button>
                     <Button variant="outline" className="w-full" disabled={isSubmitting}>
                         Login with Google
                     </Button>
                 </div>
               </div>
-              <div className="mt-4 text-center text-sm">
+              <div className="mt-4 text-sm flex gap-2 items-center justify-center">
                 Don&apos;t have an account?{" "}
-                <Link href="/login" className="underline underline-offset-4">
-                  Login
-                </Link>
+                <RegisterForm />
               </div>
             </form>
           </Form>
-        </CardContent>
-      </Card>
-    </div>
+        </DialogContent>
+      </Dialog>
   )
 }
 
-export default RegisterForm
+export default LoginForm
