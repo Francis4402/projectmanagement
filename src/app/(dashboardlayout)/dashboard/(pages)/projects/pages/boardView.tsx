@@ -4,6 +4,7 @@ import { useGetTasksQuery, useUpdateTaskStatusMutation } from "@/redux/features/
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import TaskColumnsProps from "../utils/TaskColumnsProps";
+import NewTaskForm from "../utils/NewTaskForm";
 
 
 const BoardPage = ({id}: {id: string}) => {
@@ -24,15 +25,22 @@ const BoardPage = ({id}: {id: string}) => {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mt-10">
-        {
-          taskStatus.map((status) => (
-            <TaskColumnsProps key={status} status={status} tasks={tasks || []} moveTask={moveTask} />
-          ))
-        }
+    <div className="mt-10 flex flex-col gap-5">
+
+      <div className="flex justify-end">
+        <NewTaskForm />
       </div>
-    </DndProvider>
+
+      <DndProvider backend={HTML5Backend}>
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4">
+          {
+            taskStatus.map((status) => (
+              <TaskColumnsProps key={status} status={status} tasks={tasks || []} moveTask={moveTask} />
+            ))
+          }
+        </div>
+      </DndProvider>
+    </div>
   )
 }
 

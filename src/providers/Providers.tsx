@@ -2,13 +2,16 @@
 
 import { ReactNode } from "react"
 import StoreProviders from "./StoreProviders"
+import UserProvider from "@/app/context/UserContext"
 
 
 const Providers = ({ children }: { children: ReactNode }) => {
     return (
-        <StoreProviders>
-            {children}
-        </StoreProviders>
+        <UserProvider>
+            <StoreProviders>
+                {children}
+            </StoreProviders>
+        </UserProvider>
     )
   }
   

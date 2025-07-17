@@ -5,5 +5,4 @@ export const CreateBoardSchema = z.object({
     description: z.string().min(3),
     startDate: z.string(),
     endDate: z.string(),
-    teamId: z.string(),
 })

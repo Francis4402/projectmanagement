@@ -11,6 +11,7 @@ import { CreateBoardSchema } from '@/app/(dashboardlayout)/schema/CreateBoardSch
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
 import { formatISO } from 'date-fns'
+import { Textarea } from '@/components/ui/textarea'
 
 
 const BoardForms = () => {
@@ -54,7 +55,7 @@ const BoardForms = () => {
                             <FormItem>
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
-                                    <Input type='text' {...field} value={field.value || ''} placeholder='Enter Project Description' />
+                                    <Textarea {...field} value={field.value || ''} placeholder='Enter Description' />
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
@@ -116,15 +117,6 @@ const BoardForms = () => {
                             )} />
                         </div>
 
-                        <FormField control={form.control} name='teamId' render={({field}) => (
-                            <FormItem>
-                                <FormLabel>TeamId</FormLabel>
-                                <FormControl>
-                                    <Input type='text' {...field} value={field.value || ''} placeholder='Enter TeamId' />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )} />
 
                         <DialogFooter>
                             <Button type='submit'>
