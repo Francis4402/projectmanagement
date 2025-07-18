@@ -1,20 +1,17 @@
 
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LayoutDashboardIcon, List, Table, TimerIcon } from 'lucide-react'
 import BoardPage from '../pages/boardView'
 import TimeLineView from '../pages/timelineView'
 import TaskView from '../pages/taskView'
 import ListView from '../pages/listView'
+import React from 'react'
 
 
+const ProjectId = ({params}: { params: Promise<{ id: string }>}) => {
 
-type Props = {
-    params: {id: string};
-}
-
-const ProjectId = async ({params}: Props) => {
-
-    const { id } = params;
+    const { id } = React.use(params);
 
   return (
     <div className='flex flex-col gap-10 w-full'>

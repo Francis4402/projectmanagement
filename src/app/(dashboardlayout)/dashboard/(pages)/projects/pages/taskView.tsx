@@ -9,11 +9,12 @@ import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { columns } from '../utils/Table';
 import { useGetTasksQuery } from '@/redux/features/reduxapi/task';
+import NewTaskForm from '../utils/NewTaskForm';
 
 
 const TaskView = ({id}: {id: string}) => {
 
-  const {data: tasks} = useGetTasksQuery({projectId: Number(id)});
+  const {data: tasks, refetch} = useGetTasksQuery({projectId: Number(id)});
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -77,6 +78,9 @@ const TaskView = ({id}: {id: string}) => {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+      </div>
+      <div className='py-5'>
+        <NewTaskForm refetchTasks={refetch} />
       </div>
       <div className="rounded-md border">
         <Table>

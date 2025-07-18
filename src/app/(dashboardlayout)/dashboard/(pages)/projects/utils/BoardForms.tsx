@@ -12,10 +12,14 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar'
 import { formatISO } from 'date-fns'
 import { Textarea } from '@/components/ui/textarea'
+import { useCreateProjectMutation, useGetProjectsQuery } from '@/redux/features/reduxapi/project'
+import { toast } from 'sonner'
 
 
 const BoardForms = () => {
 
+    const [createProject] = useCreateProjectMutation();
+    const {refetch} = useGetProjectsQuery();
 
     const form = useForm({
         resolver: zodResolver(CreateBoardSchema),
@@ -24,8 +28,19 @@ const BoardForms = () => {
     const {formState: {isSubmitting}} = form;
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        console.log(data);
-        form.reset();
+        try {
+            const res = await createProject(data).unwrap();
+            if (res) {
+                toast.success("Project created successfully!");
+                await refetch();
+            } else {
+                toast.error("Failed to create project");
+            }
+            form.reset();
+        } catch (error) {
+            
+            console.log(error);
+        }
     }
 
 

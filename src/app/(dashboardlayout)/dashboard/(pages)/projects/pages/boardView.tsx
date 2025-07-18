@@ -12,7 +12,8 @@ const BoardPage = ({id}: {id: string}) => {
   const {data: tasks, refetch} = useGetTasksQuery({projectId: Number(id)});
   const [updateTaskStatus] = useUpdateTaskStatusMutation();
 
-  const taskStatus = ["To Do", "Work In Progress", "Under Review", "Completed"];
+
+  const taskStatus = ["To-Do", "Work-In-Progress", "Under-Review", "Completed"];
 
   const moveTask = async (taskId: number, toStatus: string) => {
     try {
@@ -28,7 +29,7 @@ const BoardPage = ({id}: {id: string}) => {
     <div className="mt-10 flex flex-col gap-5">
 
       <div className="flex justify-end">
-        <NewTaskForm />
+        <NewTaskForm refetchTasks={refetch} />
       </div>
 
       <DndProvider backend={HTML5Backend}>

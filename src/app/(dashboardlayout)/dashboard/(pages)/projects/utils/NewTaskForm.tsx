@@ -13,19 +13,40 @@ import { formatISO } from 'date-fns'
 import { createTaskSchema } from '@/app/(dashboardlayout)/schema/CreateTaskSchema'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { useState, KeyboardEvent, ChangeEvent } from 'react'
+import { useState, KeyboardEvent, ChangeEvent, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
+import { useUser } from '@/app/context/UserContext'
+import { useGetProjectsQuery } from '@/redux/features/reduxapi/project'
+import { useGetUsersQuery } from '@/redux/features/reduxapi/users'
+import { useCreateTaskMutation } from '@/redux/features/reduxapi/task'
+import { toast } from 'sonner'
 
 
-const NewTaskForm = () => {
+const NewTaskForm = ({refetchTasks}: {refetchTasks: () => void}) => {
     
     const [tagInput, setTagInput] = useState("");
     const [tags, setTags] = useState<string[]>([]);
+    const {user} = useUser();
+    const {data: projects} = useGetProjectsQuery();
+    const {data: users} = useGetUsersQuery();
+
+
+    const [createTasks] = useCreateTaskMutation();
+
 
     const form = useForm({
-        resolver: zodResolver(createTaskSchema)
+        resolver: zodResolver(createTaskSchema),
+        defaultValues: {
+            authorUserId: user?.userId !== undefined ? Number(user.userId) : undefined,
+        }
     });
     const {formState: {isSubmitting}} = form;
+
+    useEffect(() => {
+        if (user?.userId !== undefined) {
+            form.setValue('authorUserId', Number(user.userId));
+        }
+    }, [user?.userId, form]);
 
     const handleTagInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTagInput(e.target.value);
@@ -50,7 +71,20 @@ const NewTaskForm = () => {
     };
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        console.log({ ...data, tags });
+        
+        try {
+            const res = await createTasks(data).unwrap();
+
+            if (res) {
+                toast.success("Task created successfully!");
+                refetchTasks();
+            } else {
+                toast.error("Task creation failed");
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("Failed to create task");
+        }
         setTags([]);
         form.reset();
     }
@@ -65,7 +99,7 @@ const NewTaskForm = () => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-5'>
                         <DialogHeader>
-                            <DialogTitle>Create New Project</DialogTitle>
+                            <DialogTitle>Create New Task</DialogTitle>
                         </DialogHeader>
 
                         <FormField control={form.control} name='title' render={({field}) => (
@@ -138,9 +172,9 @@ const NewTaskForm = () => {
                                         </FormControl>
                                         <SelectContent>
                                             <SelectGroup>
-                                                <SelectItem value='To Do'>To Do</SelectItem>
-                                                <SelectItem value="Work In Progress">Work In Progress</SelectItem>
-                                                <SelectItem value="Under Review">Under Review</SelectItem>
+                                                <SelectItem value='To-Do'>To Do</SelectItem>
+                                                <SelectItem value="Work-In-Progress">Work In Progress</SelectItem>
+                                                <SelectItem value="Under-Review">Under Review</SelectItem>
                                                 <SelectItem value='Completed'>Completed</SelectItem>
                                             </SelectGroup>
                                         </SelectContent>
@@ -235,7 +269,7 @@ const NewTaskForm = () => {
                             <FormItem>
                                 <FormLabel>Points</FormLabel>
                                 <FormControl>
-                                    <Input type='text' {...field} value={field.value || ''} placeholder='Enter Points' />
+                                    <Input type='number' {...field} value={field.value || ''} placeholder='Enter Points' onChange={e => field.onChange(e.target.value ? parseInt(e.target.value, 10) : '')} />
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
@@ -245,7 +279,14 @@ const NewTaskForm = () => {
                             <FormItem>
                                 <FormLabel>Author Id</FormLabel>
                                 <FormControl>
-                                    <Input type='text' {...field} value={field.value || ''} placeholder='Enter Author Id' />
+                                    <Input
+                                        type='number'
+                                        {...field}
+                                        value={user?.userId !== undefined ? Number(user.userId) : ''}
+                                        readOnly
+                                        tabIndex={-1}
+                                        className="bg-gray-100 cursor-not-allowed"
+                                    />
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
@@ -253,10 +294,27 @@ const NewTaskForm = () => {
 
                         <FormField control={form.control} name='assignedUserId' render={({field}) => (
                             <FormItem>
-                                <FormLabel>Assigned Id</FormLabel>
-                                <FormControl>
-                                    <Input type='text' {...field} value={field.value || ''} placeholder='Enter Assigned Id' />
-                                </FormControl>
+                                <FormLabel>Assigned User</FormLabel>
+                                <Select onValueChange={val => field.onChange(val ? parseInt(val, 10) : undefined)} value={field.value?.toString() || ''}>
+                                    <FormControl>
+                                        <SelectTrigger className='h-10 w-full'>
+                                            <SelectValue placeholder = "Select User" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            {
+                                                users?.map((user, index) => {
+                                                    return (
+                                                        <SelectItem key={index} value={user.userId?.toString() || ''}>
+                                                            {user.username}
+                                                        </SelectItem>
+                                                    )
+                                                })
+                                            }
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage/>
                             </FormItem>
                         )} />
@@ -264,9 +322,26 @@ const NewTaskForm = () => {
                         <FormField control={form.control} name='projectId' render={({field}) => (
                             <FormItem>
                                 <FormLabel>Project Id</FormLabel>
-                                <FormControl>
-                                    <Input type='text' {...field} value={field.value || ''} placeholder='Enter Project Id' />
-                                </FormControl>
+                                <Select onValueChange={val => field.onChange(val ? parseInt(val, 10) : undefined)} value={field.value?.toString() || ''}>
+                                    <FormControl>
+                                        <SelectTrigger className='h-10 w-full'>
+                                            <SelectValue placeholder = "Select Project" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            {
+                                                projects?.map((project, index) => {
+                                                    return (
+                                                        <SelectItem key={index} value={project.id.toString()}>
+                                                            {project.name}
+                                                        </SelectItem>
+                                                    )
+                                                })
+                                            }
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage/>
                             </FormItem>
                         )} />

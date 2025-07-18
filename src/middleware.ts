@@ -9,6 +9,15 @@ const roleBasedRoutes: Record<string, string[]> = {
   User: userRoutes,
 };
 
+
+const isMatchingRoute = (path: string, routePatern: string) => {
+  if (routePatern.includes('[id]')) {
+    const basepath = routePatern.replace('/[id]', '');
+    return path.startsWith(basepath + '/') && path.split('/').length === routePatern.split('/').length;
+  }
+  return path === routePatern;
+}
+
 export const middleware = async (request: NextRequest) => {
   
   const { nextUrl, cookies } = request;
@@ -46,7 +55,7 @@ export const middleware = async (request: NextRequest) => {
 
   if (isLoggedIn) {
     const allowedRoutes = roleBasedRoutes[userRole || ""] || [];
-    const isAllowed = allowedRoutes.includes(nextUrl.pathname);
+    const isAllowed = allowedRoutes.some(route => isMatchingRoute(nextUrl.pathname, route));
 
     if (!isAllowed && !isPublicRoute && !isAuthRoute) {
       return NextResponse.redirect(new URL("/", request.url));

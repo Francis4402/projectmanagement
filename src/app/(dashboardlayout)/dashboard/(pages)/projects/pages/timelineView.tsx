@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useGetTasksQuery } from "@/redux/features/reduxapi/task";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import NewTaskForm from "../utils/NewTaskForm";
 
 
 
 type Timeline = "day" | "week" | "month";
 
 const TimelineView = ({ id }: {id: string}) => {
-  const { data: tasks } = useGetTasksQuery({ projectId: Number(id) });
+  const { data: tasks, refetch } = useGetTasksQuery({ projectId: Number(id) });
 
   const [viewMode, setViewMode] = useState<Timeline>("month");
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -159,9 +160,7 @@ const TimelineView = ({ id }: {id: string}) => {
         <div className="p-4">
           {renderTimeline()}
           <div className="pt-4">
-            <Button>
-              Add New Task
-            </Button>
+            <NewTaskForm refetchTasks={refetch} />
           </div>
         </div>
       </Card>

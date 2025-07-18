@@ -21,7 +21,8 @@ const Tasks = ({task}: TaskProps) => {
         }),
     }));
 
-    const taskTagsSplit = task.tags ? task.tags.split(",") : [];
+    // Use tags as array directly
+    const taskTagsArray = task.tags || [];
 
     const formattedStartDate = task.startDate
     ? format(new Date(task.startDate), "P")
@@ -78,7 +79,7 @@ const Tasks = ({task}: TaskProps) => {
             <div className="flex flex-col w-full gap-2">
                 <div className="flex flex-1 flex-wrap gap-2">
                     {
-                        taskTagsSplit.map((tag) => (
+                        taskTagsArray.map((tag) => (
                             <div key={tag} className="text-xs">
                                 {" "}
                                 {tag}
@@ -97,7 +98,7 @@ const Tasks = ({task}: TaskProps) => {
                     <div className="flex -space-x-[6px] overflow-hidden">
                         {
                             task.assignee && (
-                                <Avatar key={task.assignee.userId} className="border-2 border-white">
+                                <Avatar key={`assignee-${task.assignee.userId}`} className="border-2 border-white">
                                     <AvatarImage src={'https://res.cloudinary.com/dse9babc4/image/upload/v1752003057/2025010002I%20am.png'} alt="i" />
                                     <AvatarFallback>A</AvatarFallback>
                                 </Avatar>
@@ -105,7 +106,7 @@ const Tasks = ({task}: TaskProps) => {
                         }
                         {
                             task.author && (
-                                <Avatar key={task.author.userId} className="border-2 border-white">
+                                <Avatar key={`author-${task.author.userId}`} className="border-2 border-white">
                                     <AvatarImage src={'https://res.cloudinary.com/dse9babc4/image/upload/v1745576207/kxkwsm1md2-1745576201782-images-482024512_1261641075964882_3565966937447068422_n.jpg'} alt="i" />
                                     <AvatarFallback>A</AvatarFallback>
                                 </Avatar>
